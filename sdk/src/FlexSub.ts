@@ -4,6 +4,7 @@ import type { Address, Hash, PublicClient, WalletClient } from 'viem';
 import { LiFiIntegration } from './lifi';
 import { YellowIntegration } from './yellow';
 import { ArcIntegration } from './arc';
+import { CCTPIntegration } from './cctp';
 import type {
     FlexSubConfig,
     CreatePlanParams,
@@ -123,6 +124,7 @@ export class FlexSub {
     public lifi: LiFiIntegration;
     public yellow: YellowIntegration;
     public arc: ArcIntegration;
+    public cctp: CCTPIntegration;
 
     constructor(config: FlexSubConfig) {
         this.config = config;
@@ -136,6 +138,7 @@ export class FlexSub {
         this.lifi = new LiFiIntegration(config.lifi);
         this.yellow = new YellowIntegration(config.yellow);
         this.arc = new ArcIntegration(config.usdcAddress);
+        this.cctp = new CCTPIntegration();
     }
 
     /**

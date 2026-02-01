@@ -12,8 +12,9 @@
     "test": "vitest"
   },
   "dependencies": {
-    "@lifi/sdk": "^3.0.0",
+    "@circle-fin/provider-cctp-v2": "^1.3.0",
     "@erc7824/nitrolite": "^0.1.0",
+    "@lifi/sdk": "^3.0.0",
     "viem": "^2.0.0"
   },
   "devDependencies": {
