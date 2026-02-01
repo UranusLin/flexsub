@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 import { useAccount, useWalletClient, usePublicClient } from 'wagmi';
 import { parseUnits, formatUnits } from 'viem';
+import Link from 'next/link';
 import styles from './page.module.css';
 import { FLEXSUB_CONFIG } from './providers';
 
@@ -465,9 +466,14 @@ export default function Home() {
             <footer className={styles.footer}>
                 <p>Built for HackMoney 2026 🏆</p>
                 <p className={styles.prizes}>Yellow · Arc · LI.FI</p>
-                <a href="/debug" className={styles.debugLink}>
-                    🔧 Open Debug Console
-                </a>
+                <div>
+                    <Link href="/dashboard" className={styles.dashboardLink}>
+                        📋 My Subscriptions
+                    </Link>
+                    <Link href="/debug" className={styles.debugLink}>
+                        🔧 Debug Console
+                    </Link>
+                </div>
             </footer>
         </main>
     );
