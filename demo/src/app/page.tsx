@@ -261,14 +261,14 @@ export default function Home() {
     return (
         <main className={styles.main}>
             <header className={styles.header}>
+                <div className={styles.walletContainer}>
+                    <ConnectButton />
+                </div>
                 <h1 className={styles.logo}>
                     <span className={styles.logoIcon}>⚡</span>
                     FlexSub
                 </h1>
                 <p className={styles.tagline}>Cross-chain Instant Subscription Protocol</p>
-                <div style={{ marginTop: '1rem' }}>
-                    <ConnectButton />
-                </div>
             </header>
 
             <section className={styles.hero}>
@@ -279,7 +279,7 @@ export default function Home() {
                         <span className={styles.badge}>LI.FI</span>
                         <span className={styles.badge}>Yellow</span>
                         <span className={styles.badge}>Arc</span>
-                        {isConnected && <span className={styles.badge} style={{ background: '#22c55e' }}>🔗 Connected</span>}
+                        {isConnected && <span className={`${styles.badge} ${styles.connectedBadge}`}>🔗 Connected</span>}
                     </div>
                 </div>
             </section>
@@ -466,7 +466,7 @@ export default function Home() {
             <footer className={styles.footer}>
                 <p>Built for HackMoney 2026 🏆</p>
                 <p className={styles.prizes}>Yellow · Arc · LI.FI</p>
-                <div>
+                <div className={styles.footerLinks}>
                     <Link href="/dashboard" className={styles.dashboardLink}>
                         📋 My Subscriptions
                     </Link>
