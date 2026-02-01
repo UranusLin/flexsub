@@ -1,0 +1,39 @@
+{
+    "name": "flexsub-monorepo",
+    "private": true,
+    "workspaces": [
+        "sdk",
+        "demo"
+    ],
+    "scripts": {
+        "dev": "pnpm --filter @flexsub/demo dev",
+        "dev:all": "concurrently -n anvil,deploy,demo -c blue,green,magenta \"pnpm anvil\" \"sleep 3 && pnpm deploy:local\" \"sleep 5 && pnpm dev\"",
+        "anvil": "anvil --host 0.0.0.0",
+        "deploy:local": "cd contracts && forge script script/Deploy.s.sol:DeployFlexSub --rpc-url http://127.0.0.1:8545 --broadcast",
+        "build": "pnpm --filter @flexsub/sdk build && pnpm --filter @flexsub/demo build",
+        "build:contracts": "cd contracts && forge build",
+        "test:contracts": "cd contracts && forge test",
+        "lint": "pnpm -r lint",
+        "prepare": "husky"
+    },
+    "engines": {
+        "node": ">=18"
+    },
+    "packageManager": "pnpm@9.15.0",
+    "devDependencies": {
+        "concurrently": "^9.2.1",
+        "husky": "^9.1.7",
+        "lint-staged": "^16.2.7"
+    },
+    "lint-staged": {
+        "demo/**/*.{ts,tsx}": [
+            "eslint --fix --max-warnings 0"
+        ],
+        "sdk/**/*.ts": [
+            "eslint --fix --max-warnings 0"
+        ],
+        "*.{json,md}": [
+            "prettier --write"
+        ]
+    }
+}
