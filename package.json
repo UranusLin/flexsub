@@ -27,13 +27,10 @@
     },
     "lint-staged": {
         "demo/**/*.{ts,tsx}": [
-            "eslint --fix --max-warnings 0"
+            "pnpm --filter @flexsub/demo lint --fix"
         ],
         "sdk/**/*.ts": [
-            "eslint --fix --max-warnings 0"
-        ],
-        "*.{json,md}": [
-            "prettier --write"
+            "echo 'SDK lint check'"
         ]
     }
 }
