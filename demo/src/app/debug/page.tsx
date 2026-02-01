@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import Link from 'next/link';
 import styles from './debug.module.css';
 
 // Contract ABI for FlexSubManager
@@ -123,6 +124,8 @@ export default function DebugPage() {
     const [logs, setLogs] = useState<LogEntry[]>([]);
     const [connected, setConnected] = useState(false);
     const [account, setAccount] = useState('');
+    const [chainId, setChainId] = useState<number | null>(null);
+    const [isFauceting, setIsFauceting] = useState(false);
 
     // LI.FI State
     const [lifiFromChain, setLifiFromChain] = useState('42161');
@@ -163,12 +166,53 @@ export default function DebugPage() {
                 });
                 setAccount(accounts[0]);
                 setConnected(true);
+
+                // Get chain ID
+                const chainIdHex = await (window as any).ethereum.request({ method: 'eth_chainId' });
+                setChainId(parseInt(chainIdHex, 16));
+
                 addLog('success', `Wallet connected: ${accounts[0].slice(0, 6)}...${accounts[0].slice(-4)}`);
             } catch (error) {
                 addLog('error', 'Failed to connect wallet');
             }
         } else {
             addLog('error', 'MetaMask not detected');
+        }
+    };
+
+    // Anvil Faucet - send ETH to connected account
+    const requestAnvilFaucet = async () => {
+        if (!account || chainId !== 31337) {
+            addLog('error', 'Faucet only available on Anvil (chain 31337)');
+            return;
+        }
+
+        setIsFauceting(true);
+        addLog('info', 'Requesting Anvil faucet...');
+
+        try {
+            // Use Anvil's built-in faucet via JSON-RPC
+            const response = await fetch('http://127.0.0.1:8545', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    jsonrpc: '2.0',
+                    id: 1,
+                    method: 'anvil_setBalance',
+                    params: [account, '0x21E19E0C9BAB2400000'], // 10000 ETH in hex
+                }),
+            });
+
+            const result = await response.json();
+            if (result.error) {
+                throw new Error(result.error.message);
+            }
+
+            addLog('success', '💰 10,000 ETH added to your account!');
+        } catch (error: any) {
+            addLog('error', `Faucet failed: ${error.message}`);
+        } finally {
+            setIsFauceting(false);
         }
     };
 
@@ -304,15 +348,30 @@ export default function DebugPage() {
         <div className={styles.container}>
             {/* Header */}
             <header className={styles.header}>
-                <div className={styles.logo}>
-                    <span className={styles.logoIcon}>🔧</span>
-                    FlexSub Debug
+                <div className={styles.headerLeft}>
+                    <Link href="/" className={styles.backLink}>← Back to Demo</Link>
+                    <div className={styles.logo}>
+                        <span className={styles.logoIcon}>🔧</span>
+                        FlexSub Debug
+                    </div>
                 </div>
                 <div className={styles.headerRight}>
                     {connected ? (
-                        <div className={styles.connectedBadge}>
-                            🟢 {account.slice(0, 6)}...{account.slice(-4)}
-                        </div>
+                        <>
+                            {chainId === 31337 && (
+                                <button
+                                    className={styles.faucetButton}
+                                    onClick={requestAnvilFaucet}
+                                    disabled={isFauceting}
+                                >
+                                    {isFauceting ? '⏳...' : '🚰 Get ETH'}
+                                </button>
+                            )}
+                            <div className={styles.connectedBadge}>
+                                🟢 {account.slice(0, 6)}...{account.slice(-4)}
+                                {chainId === 31337 && <span className={styles.chainBadge}>Anvil</span>}
+                            </div>
+                        </>
                     ) : (
                         <button className={styles.connectButton} onClick={connectWallet}>
                             Connect Wallet

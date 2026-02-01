@@ -15,6 +15,23 @@
   border-bottom: 1px solid #2a2a35;
 }
 
+.headerLeft {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.backLink {
+  color: #71717a;
+  text-decoration: none;
+  font-size: 0.9rem;
+  transition: color 0.2s;
+}
+
+.backLink:hover {
+  color: #a78bfa;
+}
+
 .logo {
   display: flex;
   align-items: center;
@@ -31,7 +48,7 @@
 .headerRight {
   display: flex;
   align-items: center;
-  gap: 1rem;
+  gap: 0.75rem;
 }
 
 .connectButton {
@@ -49,13 +66,47 @@
   transform: scale(1.02);
 }
 
+.faucetButton {
+  background: rgba(34, 197, 94, 0.1);
+  border: 1px solid #22c55e;
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  color: #22c55e;
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.faucetButton:hover:not(:disabled) {
+  background: rgba(34, 197, 94, 0.2);
+}
+
+.faucetButton:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
 .connectedBadge {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
   background: #1e1e28;
   border: 1px solid #22c55e;
   padding: 0.5rem 1rem;
   border-radius: 0.5rem;
   font-size: 0.9rem;
 }
+
+.chainBadge {
+  background: rgba(99, 102, 241, 0.2);
+  color: #a78bfa;
+  padding: 0.2rem 0.5rem;
+  border-radius: 0.25rem;
+  font-size: 0.75rem;
+  margin-left: 0.25rem;
+}
+
 
 /* Tabs */
 .tabs {
