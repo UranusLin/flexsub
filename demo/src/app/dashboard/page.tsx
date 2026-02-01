@@ -2,11 +2,11 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
-import { useAccount, useWalletClient, usePublicClient } from 'wagmi';
+import { useAccount, useWalletClient, usePublicClient, useChainId } from 'wagmi';
 import { formatUnits } from 'viem';
 import Link from 'next/link';
 import styles from './dashboard.module.css';
-import { FLEXSUB_CONFIG } from '../providers';
+import { getNetworkConfig, isContractDeployed } from '../providers';
 
 // FlexSubManager ABI
 const FLEXSUB_ABI = [
@@ -81,6 +81,11 @@ export default function Dashboard() {
     const { address, isConnected } = useAccount();
     const { data: walletClient } = useWalletClient();
     const publicClient = usePublicClient();
+    const chainId = useChainId();
+
+    // Get current network config
+    const networkConfig = getNetworkConfig(chainId);
+    const contractAddress = networkConfig?.contractAddress;
 
     const [subscriptions, setSubscriptions] = useState<SubscriptionWithPlan[]>([]);
     const [isLoading, setIsLoading] = useState(false);
@@ -89,13 +94,13 @@ export default function Dashboard() {
 
     // Load user's subscriptions
     const loadSubscriptions = useCallback(async () => {
-        if (!publicClient || !address) return;
+        if (!publicClient || !address || !contractAddress) return;
 
         setIsLoading(true);
         try {
             // Get subscription IDs for user
             const subIds = await publicClient.readContract({
-                address: FLEXSUB_CONFIG.contractAddress,
+                address: contractAddress,
                 abi: FLEXSUB_ABI,
                 functionName: 'getSubscriberSubscriptions',
                 args: [address],
@@ -106,7 +111,7 @@ export default function Dashboard() {
             for (const subId of subIds) {
                 // Get subscription details
                 const sub = await publicClient.readContract({
-                    address: FLEXSUB_CONFIG.contractAddress,
+                    address: contractAddress,
                     abi: FLEXSUB_ABI,
                     functionName: 'getSubscription',
                     args: [subId],
@@ -121,7 +126,7 @@ export default function Dashboard() {
 
                 // Get plan details
                 const plan = await publicClient.readContract({
-                    address: FLEXSUB_CONFIG.contractAddress,
+                    address: contractAddress,
                     abi: FLEXSUB_ABI,
                     functionName: 'getPlan',
                     args: [sub.planId],
@@ -163,14 +168,14 @@ export default function Dashboard() {
 
     // Cancel subscription
     const handleCancel = async (subId: bigint) => {
-        if (!walletClient) return;
+        if (!walletClient || !contractAddress) return;
 
         setCancellingId(subId);
         setMessage(null);
 
         try {
             const hash = await walletClient.writeContract({
-                address: FLEXSUB_CONFIG.contractAddress,
+                address: contractAddress,
                 abi: FLEXSUB_ABI,
                 functionName: 'cancelSubscription',
                 args: [subId],

@@ -2,11 +2,11 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
-import { useAccount, useWalletClient, usePublicClient } from 'wagmi';
+import { useAccount, useWalletClient, usePublicClient, useChainId } from 'wagmi';
 import { parseUnits, formatUnits } from 'viem';
 import Link from 'next/link';
 import styles from './page.module.css';
-import { FLEXSUB_CONFIG } from './providers';
+import { getNetworkConfig, isContractDeployed, NETWORK_CONFIGS } from './providers';
 
 // FlexSubManager ABI (matching the SDK)
 const FLEXSUB_ABI = [
@@ -93,11 +93,11 @@ const INITIAL_PLANS: Plan[] = [
     },
 ];
 
+// Supported chains with deployment status
 const SUPPORTED_CHAINS = [
     { id: 31337, name: 'Anvil Local', icon: '🔨' },
-    { id: 42161, name: 'Arbitrum', icon: '🔵' },
-    { id: 10, name: 'Optimism', icon: '🔴' },
-    { id: 8453, name: 'Base', icon: '🔷' },
+    { id: 421614, name: 'Arbitrum Sepolia', icon: '🔵' },
+    { id: 84532, name: 'Base Sepolia', icon: '🔷' },
 ];
 
 type FlowStep = 'idle' | 'connecting' | 'creating-plan' | 'subscribing' | 'success' | 'error';
@@ -106,6 +106,7 @@ export default function Home() {
     const { address, isConnected } = useAccount();
     const { data: walletClient } = useWalletClient();
     const publicClient = usePublicClient();
+    const chainId = useChainId();
 
     const [plans, setPlans] = useState<Plan[]>(INITIAL_PLANS);
     const [selectedPlan, setSelectedPlan] = useState<Plan | null>(null);
@@ -115,6 +116,11 @@ export default function Home() {
     const [error, setError] = useState<string>('');
     const [logs, setLogs] = useState<string[]>([]);
 
+    // Get current network config
+    const networkConfig = getNetworkConfig(chainId);
+    const contractAddress = networkConfig?.contractAddress;
+    const isDeployed = isContractDeployed(chainId);
+
     const addLog = useCallback((message: string) => {
         setLogs(prev => [...prev, `[${new Date().toLocaleTimeString()}] ${message}`]);
         console.log(message);
@@ -122,21 +128,21 @@ export default function Home() {
 
     // Load on-chain plans
     const loadPlans = useCallback(async () => {
-        if (!publicClient) return;
+        if (!publicClient || !contractAddress) return;
 
         try {
             addLog('📖 Loading plans from contract...');
             const nextPlanId = await publicClient.readContract({
-                address: FLEXSUB_CONFIG.contractAddress,
+                address: contractAddress,
                 abi: FLEXSUB_ABI,
                 functionName: 'nextPlanId',
             });
 
             const onChainPlans: Plan[] = [];
-            for (let i = 1n; i < nextPlanId; i++) {
+            for (let i = 1n; i < (nextPlanId as bigint); i++) {
                 try {
                     const planData = await publicClient.readContract({
-                        address: FLEXSUB_CONFIG.contractAddress,
+                        address: contractAddress,
                         abi: FLEXSUB_ABI,
                         functionName: 'getPlan',
                         args: [i],
@@ -177,7 +183,7 @@ export default function Home() {
 
     // Create a plan on-chain (merchant function)
     const handleCreatePlan = async () => {
-        if (!walletClient || !selectedPlan) return;
+        if (!walletClient || !selectedPlan || !contractAddress) return;
 
         setFlowStep('creating-plan');
         setError('');
@@ -189,7 +195,7 @@ export default function Home() {
             const periodDuration = 2592000n; // 30 days in seconds
 
             const hash = await walletClient.writeContract({
-                address: FLEXSUB_CONFIG.contractAddress,
+                address: contractAddress,
                 abi: FLEXSUB_ABI,
                 functionName: 'createPlan',
                 args: [priceInUnits, periodDuration, selectedPlan.name],
@@ -214,7 +220,7 @@ export default function Home() {
 
     // Subscribe to a plan on-chain
     const handleSubscribe = async () => {
-        if (!walletClient || !selectedPlan) return;
+        if (!walletClient || !selectedPlan || !contractAddress) return;
 
         setFlowStep('subscribing');
         setError('');
@@ -231,7 +237,7 @@ export default function Home() {
             addLog(`📝 Step 3: Subscribing to plan #${selectedPlan.id} on-chain...`);
 
             const hash = await walletClient.writeContract({
-                address: FLEXSUB_CONFIG.contractAddress,
+                address: contractAddress,
                 abi: FLEXSUB_ABI,
                 functionName: 'subscribe',
                 args: [selectedPlan.id],
