@@ -7,6 +7,9 @@ import { http, type Chain } from 'viem';
 import { arbitrumSepolia, baseSepolia } from 'viem/chains';
 import '@rainbow-me/rainbowkit/styles.css';
 
+// Auto-generated deployment addresses (updated by deploy-and-sync.sh)
+import deployments from './deployments.json';
+
 // ============ Network Configurations ============
 
 // Anvil local chain
@@ -20,6 +23,17 @@ const anvil: Chain = {
     testnet: true,
 };
 
+// Type for deployment JSON
+type DeploymentInfo = {
+    name: string;
+    contractAddress: string;
+    usdcAddress: string;
+    timestamp?: string;
+};
+
+// Get Anvil addresses from deployments.json (auto-synced)
+const anvilDeployment = (deployments as Record<string, DeploymentInfo>)['31337'];
+
 // Supported networks with contract addresses
 export const NETWORK_CONFIGS: Record<number, {
     name: string;
@@ -29,11 +43,11 @@ export const NETWORK_CONFIGS: Record<number, {
     explorerUrl?: string;
     faucetUrl?: string;
 }> = {
-    // Anvil (Local) - MockUSDC deploys first, then FlexSubManager
+    // Anvil (Local) - Auto-synced from deployments.json
     31337: {
         name: 'Anvil Local',
-        contractAddress: '0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512', // FlexSubManager (second contract)
-        usdcAddress: '0x5FbDB2315678afecb367f032d93F642f64180aa3', // MockUSDC (first contract)
+        contractAddress: anvilDeployment?.contractAddress as `0x${string}` ?? null,
+        usdcAddress: anvilDeployment?.usdcAddress as `0x${string}` ?? '0x0',
         rpcUrl: 'http://127.0.0.1:8545',
     },
     // Arbitrum Sepolia (Testnet)

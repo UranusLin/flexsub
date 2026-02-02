@@ -191,8 +191,9 @@ export default function DebugPage() {
         addLog('info', 'Requesting USDC from MockUSDC faucet...');
 
         try {
-            // MockUSDC address on Anvil (first deployed contract)
-            const mockUsdcAddress = '0x5FbDB2315678afecb367f032d93F642f64180aa3';
+            // MockUSDC address from deployments.json (auto-synced)
+            const deployments = await import('../deployments.json');
+            const mockUsdcAddress = (deployments as any)['31337']?.usdcAddress || '0x0';
 
             // Encode faucet() function call
             const faucetData = '0xde5f72fd'; // keccak256("faucet()")[:4]
