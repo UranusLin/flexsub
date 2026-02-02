@@ -281,26 +281,33 @@ export default function UnifiedDemoPage() {
 
                 {/* Step 1: Select Plan */}
                 {step === 'plan' && (
-                    <div className="animate-fadeIn">
-                        <h1 className="text-4xl font-bold text-center text-white mb-2">Choose Your Plan</h1>
-                        <p className="text-center text-gray-400 mb-10">Select a subscription plan to continue</p>
+                    <div>
+                        <h1 style={{ fontSize: '2.25rem', fontWeight: 'bold', textAlign: 'center', color: 'white', marginBottom: '0.5rem' }}>Choose Your Plan</h1>
+                        <p style={{ textAlign: 'center', color: '#9CA3AF', marginBottom: '2.5rem' }}>Select a subscription plan to continue</p>
 
-                        <div className="grid md:grid-cols-3 gap-6 mb-10">
+                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1.5rem', marginBottom: '2.5rem' }}>
                             {PLANS.map(plan => (
                                 <button
                                     key={plan.id}
                                     onClick={() => setSelectedPlan(plan)}
-                                    className={`p-6 rounded-2xl border-2 transition-all text-left
-                                        ${selectedPlan.id === plan.id
-                                            ? 'border-indigo-500 bg-indigo-500/10'
-                                            : 'border-white/10 bg-white/5 hover:border-white/30'}`}
+                                    style={{
+                                        padding: '1.5rem',
+                                        borderRadius: '1rem',
+                                        border: selectedPlan.id === plan.id ? '2px solid #6366F1' : '2px solid rgba(255,255,255,0.1)',
+                                        background: selectedPlan.id === plan.id ? 'rgba(99,102,241,0.1)' : 'rgba(255,255,255,0.05)',
+                                        textAlign: 'left',
+                                        cursor: 'pointer',
+                                        transition: 'all 0.2s'
+                                    }}
                                 >
-                                    <div className="text-lg font-bold text-white mb-1">{plan.name}</div>
-                                    <div className="text-3xl font-bold text-indigo-400 mb-4">${plan.price}<span className="text-sm text-gray-400">/mo</span></div>
-                                    <ul className="space-y-2">
+                                    <div style={{ fontSize: '1.125rem', fontWeight: 'bold', color: 'white', marginBottom: '0.25rem' }}>{plan.name}</div>
+                                    <div style={{ fontSize: '1.875rem', fontWeight: 'bold', color: '#818CF8', marginBottom: '1rem' }}>
+                                        ${plan.price}<span style={{ fontSize: '0.875rem', color: '#9CA3AF' }}>/mo</span>
+                                    </div>
+                                    <ul style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
                                         {plan.features.map((f, i) => (
-                                            <li key={i} className="text-sm text-gray-400 flex items-center gap-2">
-                                                <span className="text-green-400">✓</span> {f}
+                                            <li key={i} style={{ fontSize: '0.875rem', color: '#9CA3AF', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                                                <span style={{ color: '#22C55E' }}>✓</span> {f}
                                             </li>
                                         ))}
                                     </ul>
@@ -308,12 +315,20 @@ export default function UnifiedDemoPage() {
                             ))}
                         </div>
 
-                        <div className="text-center">
+                        <div style={{ textAlign: 'center' }}>
                             <button
                                 onClick={() => setStep('payment')}
                                 disabled={!isConnected}
-                                className="px-12 py-4 bg-gradient-to-r from-indigo-500 to-purple-500 text-white font-bold rounded-xl
-                                           hover:from-indigo-600 hover:to-purple-600 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                                style={{
+                                    padding: '1rem 3rem',
+                                    background: 'linear-gradient(to right, #6366F1, #8B5CF6)',
+                                    color: 'white',
+                                    fontWeight: 'bold',
+                                    borderRadius: '0.75rem',
+                                    border: 'none',
+                                    cursor: isConnected ? 'pointer' : 'not-allowed',
+                                    opacity: isConnected ? 1 : 0.5
+                                }}
                             >
                                 {isConnected ? 'Continue to Payment' : 'Connect Wallet First'}
                             </button>
