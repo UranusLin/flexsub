@@ -319,44 +319,60 @@ export default function Home() {
                 <p className={styles.tagline}>Cross-chain Instant Subscription Protocol</p>
 
                 {/* Prize Demo Navigation */}
-                <nav style={{ display: 'flex', gap: '1rem', marginTop: '1rem' }}>
+                <nav style={{ display: 'flex', gap: '0.75rem', marginTop: '1rem', flexWrap: 'wrap', justifyContent: 'center' }}>
+                    <Link
+                        href="/unified-demo"
+                        style={{
+                            padding: '0.75rem 1.5rem',
+                            background: 'linear-gradient(135deg, #6366F1, #8B5CF6, #EC4899)',
+                            borderRadius: '0.75rem',
+                            color: 'white',
+                            textDecoration: 'none',
+                            fontSize: '0.95rem',
+                            fontWeight: '700',
+                            boxShadow: '0 4px 15px rgba(99, 102, 241, 0.4)'
+                        }}
+                    >
+                        🎯 Unified Demo
+                    </Link>
                     <Link
                         href="/cross-chain"
                         style={{
                             padding: '0.5rem 1rem',
-                            background: 'linear-gradient(135deg, #8B5CF6, #EC4899)',
+                            background: 'rgba(139, 92, 246, 0.2)',
+                            border: '1px solid rgba(139, 92, 246, 0.3)',
                             borderRadius: '0.5rem',
-                            color: 'white',
+                            color: '#A78BFA',
                             textDecoration: 'none',
-                            fontSize: '0.875rem',
-                            fontWeight: '600'
+                            fontSize: '0.8rem'
                         }}
                     >
-                        🔗 LI.FI Demo
+                        🔗 LI.FI
                     </Link>
                     <Link
                         href="/yellow-session"
                         style={{
                             padding: '0.5rem 1rem',
-                            background: 'linear-gradient(135deg, #F59E0B, #EF4444)',
+                            background: 'rgba(245, 158, 11, 0.2)',
+                            border: '1px solid rgba(245, 158, 11, 0.3)',
                             borderRadius: '0.5rem',
-                            color: 'black',
+                            color: '#FBBF24',
                             textDecoration: 'none',
-                            fontSize: '0.875rem',
-                            fontWeight: '600'
+                            fontSize: '0.8rem'
                         }}
                     >
-                        ⚡ Yellow Demo
+                        ⚡ Yellow
                     </Link>
                     <Link
                         href="/debug"
                         style={{
                             padding: '0.5rem 1rem',
-                            background: 'rgba(255,255,255,0.1)',
+                            background: 'rgba(255,255,255,0.05)',
+                            border: '1px solid rgba(255,255,255,0.1)',
                             borderRadius: '0.5rem',
-                            color: 'white',
+                            color: '#9CA3AF',
                             textDecoration: 'none',
-                            fontSize: '0.875rem'
+                            fontSize: '0.8rem'
                         }}
                     >
                         🔧 Debug
