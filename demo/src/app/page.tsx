@@ -317,6 +317,51 @@ export default function Home() {
                     FlexSub
                 </h1>
                 <p className={styles.tagline}>Cross-chain Instant Subscription Protocol</p>
+
+                {/* Prize Demo Navigation */}
+                <nav style={{ display: 'flex', gap: '1rem', marginTop: '1rem' }}>
+                    <Link
+                        href="/cross-chain"
+                        style={{
+                            padding: '0.5rem 1rem',
+                            background: 'linear-gradient(135deg, #8B5CF6, #EC4899)',
+                            borderRadius: '0.5rem',
+                            color: 'white',
+                            textDecoration: 'none',
+                            fontSize: '0.875rem',
+                            fontWeight: '600'
+                        }}
+                    >
+                        🔗 LI.FI Demo
+                    </Link>
+                    <Link
+                        href="/yellow-session"
+                        style={{
+                            padding: '0.5rem 1rem',
+                            background: 'linear-gradient(135deg, #F59E0B, #EF4444)',
+                            borderRadius: '0.5rem',
+                            color: 'black',
+                            textDecoration: 'none',
+                            fontSize: '0.875rem',
+                            fontWeight: '600'
+                        }}
+                    >
+                        ⚡ Yellow Demo
+                    </Link>
+                    <Link
+                        href="/debug"
+                        style={{
+                            padding: '0.5rem 1rem',
+                            background: 'rgba(255,255,255,0.1)',
+                            borderRadius: '0.5rem',
+                            color: 'white',
+                            textDecoration: 'none',
+                            fontSize: '0.875rem'
+                        }}
+                    >
+                        🔧 Debug
+                    </Link>
+                </nav>
             </header>
 
             <section className={styles.hero}>
