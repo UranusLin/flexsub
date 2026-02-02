@@ -261,19 +261,33 @@ export default function UnifiedDemoPage() {
                 </div>
             </header>
 
-            <main style={{ maxWidth: '72rem', margin: '0 auto', padding: '3rem 1.5rem' }}>
+            <main style={{ maxWidth: '72rem', margin: '0 auto', padding: '3rem 1.5rem 6rem 1.5rem' }}>
                 {/* Progress Steps */}
                 <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '3rem' }}>
-                    <div className="flex items-center gap-4">
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
                         {['plan', 'payment', 'processing', 'success'].map((s, i) => (
-                            <div key={s} className="flex items-center">
-                                <div className={`w-10 h-10 rounded-full flex items-center justify-center font-bold
-                                    ${step === s ? 'bg-indigo-500 text-white' :
-                                        ['plan', 'payment', 'processing', 'success'].indexOf(step) > i ? 'bg-green-500 text-white' :
-                                            'bg-gray-700 text-gray-400'}`}>
+                            <div key={s} style={{ display: 'flex', alignItems: 'center' }}>
+                                <div style={{
+                                    width: '2.5rem',
+                                    height: '2.5rem',
+                                    borderRadius: '50%',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    fontWeight: 'bold',
+                                    background: step === s ? '#6366F1' :
+                                        ['plan', 'payment', 'processing', 'success'].indexOf(step) > i ? '#22C55E' : '#374151',
+                                    color: step === s || ['plan', 'payment', 'processing', 'success'].indexOf(step) > i ? 'white' : '#9CA3AF'
+                                }}>
                                     {i + 1}
                                 </div>
-                                {i < 3 && <div className={`w-16 h-1 ${['plan', 'payment', 'processing', 'success'].indexOf(step) > i ? 'bg-green-500' : 'bg-gray-700'}`} />}
+                                {i < 3 && (
+                                    <div style={{
+                                        width: '4rem',
+                                        height: '4px',
+                                        background: ['plan', 'payment', 'processing', 'success'].indexOf(step) > i ? '#22C55E' : '#374151'
+                                    }} />
+                                )}
                             </div>
                         ))}
                     </div>
@@ -338,63 +352,92 @@ export default function UnifiedDemoPage() {
 
                 {/* Step 2: Select Payment Method */}
                 {step === 'payment' && (
-                    <div className="animate-fadeIn">
-                        <h1 className="text-4xl font-bold text-center text-white mb-2">Choose Payment Method</h1>
-                        <p className="text-center text-gray-400 mb-10">
-                            Subscribing to <span className="text-indigo-400 font-bold">{selectedPlan.name}</span> for <span className="text-green-400 font-bold">${selectedPlan.price}/mo</span>
+                    <div>
+                        <h1 style={{ fontSize: '2.25rem', fontWeight: 'bold', textAlign: 'center', color: 'white', marginBottom: '0.5rem' }}>
+                            Choose Payment Method
+                        </h1>
+                        <p style={{ textAlign: 'center', color: '#9CA3AF', marginBottom: '2.5rem' }}>
+                            Subscribing to <span style={{ color: '#818CF8', fontWeight: 'bold' }}>{selectedPlan.name}</span> for <span style={{ color: '#22C55E', fontWeight: 'bold' }}>${selectedPlan.price}/mo</span>
                         </p>
 
-                        <div className="grid md:grid-cols-3 gap-6 mb-8">
+                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1.5rem', marginBottom: '2rem' }}>
                             {PAYMENT_METHODS.map(method => (
                                 <button
                                     key={method.id}
                                     onClick={() => setSelectedPayment(method)}
-                                    className={`p-6 rounded-2xl border-2 transition-all text-left
-                                        ${selectedPayment.id === method.id
-                                            ? 'border-indigo-500 bg-indigo-500/10'
-                                            : 'border-white/10 bg-white/5 hover:border-white/30'}`}
+                                    style={{
+                                        padding: '1.5rem',
+                                        borderRadius: '1rem',
+                                        border: selectedPayment.id === method.id ? '2px solid #6366F1' : '2px solid rgba(255,255,255,0.1)',
+                                        background: selectedPayment.id === method.id ? 'rgba(99,102,241,0.1)' : 'rgba(255,255,255,0.05)',
+                                        textAlign: 'left',
+                                        cursor: 'pointer',
+                                        transition: 'all 0.2s',
+                                        minHeight: '180px'
+                                    }}
                                 >
-                                    <div className="text-4xl mb-3">{method.icon}</div>
-                                    <div className="text-lg font-bold text-white mb-1">{method.name}</div>
-                                    <div className="text-xs text-yellow-400 mb-2">🏆 {method.prize}</div>
-                                    <div className="text-sm text-gray-400">{method.description}</div>
+                                    <div style={{ fontSize: '2.5rem', marginBottom: '0.75rem' }}>{method.icon}</div>
+                                    <div style={{ fontSize: '1.125rem', fontWeight: 'bold', color: 'white', marginBottom: '0.25rem' }}>{method.name}</div>
+                                    <div style={{ fontSize: '0.75rem', color: '#FBBF24', marginBottom: '0.5rem' }}>🏆 {method.prize}</div>
+                                    <div style={{ fontSize: '0.875rem', color: '#9CA3AF' }}>{method.description}</div>
                                 </button>
                             ))}
                         </div>
 
                         {/* LI.FI Source Chain Selector */}
                         {selectedPayment.id === 'lifi' && (
-                            <div className="bg-purple-500/10 border border-purple-500/30 rounded-xl p-6 mb-8">
-                                <div className="text-white font-bold mb-3">Select Source Chain</div>
-                                <div className="grid grid-cols-4 gap-3">
+                            <div style={{ background: 'rgba(139,92,246,0.1)', border: '1px solid rgba(139,92,246,0.3)', borderRadius: '0.75rem', padding: '1.5rem', marginBottom: '2rem' }}>
+                                <div style={{ color: 'white', fontWeight: 'bold', marginBottom: '0.75rem' }}>Select Source Chain</div>
+                                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '0.75rem' }}>
                                     {SOURCE_CHAINS.map(chain => (
                                         <button
                                             key={chain.id}
                                             onClick={() => setSourceChain(chain)}
-                                            className={`p-3 rounded-lg border transition-all
-                                                ${sourceChain.id === chain.id
-                                                    ? 'border-purple-500 bg-purple-500/20'
-                                                    : 'border-white/10 hover:border-white/30'}`}
+                                            style={{
+                                                padding: '0.75rem',
+                                                borderRadius: '0.5rem',
+                                                border: sourceChain.id === chain.id ? '1px solid #8B5CF6' : '1px solid rgba(255,255,255,0.1)',
+                                                background: sourceChain.id === chain.id ? 'rgba(139,92,246,0.2)' : 'transparent',
+                                                cursor: 'pointer',
+                                                transition: 'all 0.2s'
+                                            }}
                                         >
-                                            <div className="text-white font-medium">{chain.name}</div>
-                                            <div className="text-xs text-gray-400">Pay with {chain.token}</div>
+                                            <div style={{ color: 'white', fontWeight: 500 }}>{chain.name}</div>
+                                            <div style={{ fontSize: '0.75rem', color: '#9CA3AF' }}>Pay with {chain.token}</div>
                                         </button>
                                     ))}
                                 </div>
                             </div>
                         )}
 
-                        <div className="flex justify-center gap-4">
+                        <div style={{ display: 'flex', justifyContent: 'center', gap: '1rem' }}>
                             <button
                                 onClick={() => setStep('plan')}
-                                className="px-8 py-4 bg-gray-700 text-white font-bold rounded-xl hover:bg-gray-600 transition-all"
+                                style={{
+                                    padding: '1rem 2rem',
+                                    background: '#374151',
+                                    color: 'white',
+                                    fontWeight: 'bold',
+                                    borderRadius: '0.75rem',
+                                    border: 'none',
+                                    cursor: 'pointer'
+                                }}
                             >
                                 ← Back
                             </button>
                             <button
                                 onClick={handlePayment}
-                                className={`px-12 py-4 bg-gradient-to-r ${selectedPayment.color} text-white font-bold rounded-xl
-                                           hover:opacity-90 transition-all`}
+                                style={{
+                                    padding: '1rem 3rem',
+                                    background: selectedPayment.id === 'arc' ? 'linear-gradient(to right, #3B82F6, #06B6D4)' :
+                                        selectedPayment.id === 'lifi' ? 'linear-gradient(to right, #8B5CF6, #EC4899)' :
+                                            'linear-gradient(to right, #EAB308, #F97316)',
+                                    color: 'white',
+                                    fontWeight: 'bold',
+                                    borderRadius: '0.75rem',
+                                    border: 'none',
+                                    cursor: 'pointer'
+                                }}
                             >
                                 {selectedPayment.icon} Pay with {selectedPayment.name}
                             </button>
@@ -472,24 +515,38 @@ export default function UnifiedDemoPage() {
 
                 {/* Step 4: Success */}
                 {step === 'success' && (
-                    <div className="animate-fadeIn text-center">
-                        <div className="text-8xl mb-6">🎉</div>
-                        <h1 className="text-4xl font-bold text-white mb-4">Subscription Active!</h1>
-                        <p className="text-gray-400 mb-8 max-w-lg mx-auto">
-                            Your <span className="text-indigo-400 font-bold">{selectedPlan.name}</span> subscription
-                            has been created using <span className={`font-bold`}>{selectedPayment.name}</span>.
+                    <div style={{ textAlign: 'center' }}>
+                        <div style={{ fontSize: '5rem', marginBottom: '1.5rem' }}>🎉</div>
+                        <h1 style={{ fontSize: '2.25rem', fontWeight: 'bold', color: 'white', marginBottom: '1rem' }}>Subscription Active!</h1>
+                        <p style={{ color: '#9CA3AF', marginBottom: '2rem', maxWidth: '32rem', margin: '0 auto 2rem auto' }}>
+                            Your <span style={{ color: '#818CF8', fontWeight: 'bold' }}>{selectedPlan.name}</span> subscription
+                            has been created using <span style={{ fontWeight: 'bold' }}>{selectedPayment.name}</span>.
                         </p>
 
-                        <div className="bg-green-500/10 border border-green-500/30 rounded-xl p-6 max-w-md mx-auto mb-8">
-                            <div className="text-green-400 font-bold mb-2">🏆 Prize Track Demonstrated</div>
-                            <div className="text-2xl font-bold text-white">{selectedPayment.prize}</div>
-                            <div className="text-gray-400 text-sm mt-2">{selectedPayment.description}</div>
+                        <div style={{
+                            background: 'rgba(34,197,94,0.1)',
+                            border: '1px solid rgba(34,197,94,0.3)',
+                            borderRadius: '0.75rem',
+                            padding: '1.5rem',
+                            maxWidth: '28rem',
+                            margin: '0 auto 2rem auto'
+                        }}>
+                            <div style={{ color: '#22C55E', fontWeight: 'bold', marginBottom: '0.5rem' }}>🏆 Prize Track Demonstrated</div>
+                            <div style={{ fontSize: '1.5rem', fontWeight: 'bold', color: 'white' }}>{selectedPayment.prize}</div>
+                            <div style={{ color: '#9CA3AF', fontSize: '0.875rem', marginTop: '0.5rem' }}>{selectedPayment.description}</div>
                         </div>
 
                         <button
                             onClick={resetDemo}
-                            className="px-12 py-4 bg-gradient-to-r from-indigo-500 to-purple-500 text-white font-bold rounded-xl
-                                       hover:from-indigo-600 hover:to-purple-600 transition-all"
+                            style={{
+                                padding: '1rem 3rem',
+                                background: 'linear-gradient(to right, #6366F1, #8B5CF6)',
+                                color: 'white',
+                                fontWeight: 'bold',
+                                borderRadius: '0.75rem',
+                                border: 'none',
+                                cursor: 'pointer'
+                            }}
                         >
                             Try Another Demo
                         </button>
@@ -497,11 +554,22 @@ export default function UnifiedDemoPage() {
                 )}
             </main>
 
-            {/* Footer */}
-            <footer className="border-t border-white/10 mt-20">
-                <div className="max-w-7xl mx-auto px-6 py-8 text-center text-gray-500 text-sm">
-                    FlexSub Protocol • HackMoney 2026 • Targeting $31,000+ in Prizes
-                </div>
+            {/* Footer - Fixed at bottom */}
+            <footer style={{
+                position: 'fixed',
+                bottom: 0,
+                left: 0,
+                right: 0,
+                borderTop: '1px solid rgba(255,255,255,0.1)',
+                background: 'rgba(17,24,39,0.95)',
+                backdropFilter: 'blur(8px)',
+                padding: '1rem',
+                textAlign: 'center',
+                color: '#6B7280',
+                fontSize: '0.875rem',
+                zIndex: 50
+            }}>
+                FlexSub Protocol • HackMoney 2026 • Targeting $31,000+ in Prizes
             </footer>
 
             <style jsx>{`
@@ -516,3 +584,4 @@ export default function UnifiedDemoPage() {
         </div>
     );
 }
+
