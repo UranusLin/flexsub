@@ -319,7 +319,7 @@ export default function Home() {
                 <p className={styles.tagline}>Cross-chain Instant Subscription Protocol</p>
 
                 {/* Prize Demo Navigation */}
-                <nav style={{ display: 'flex', gap: '0.75rem', marginTop: '1rem', flexWrap: 'wrap', justifyContent: 'center' }}>
+                <nav style={{ display: 'flex', gap: '0.75rem', marginTop: '1rem', flexWrap: 'wrap', justifyContent: 'center', alignItems: 'center' }}>
                     <Link
                         href="/unified-demo"
                         style={{

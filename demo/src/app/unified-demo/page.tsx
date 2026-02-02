@@ -261,9 +261,9 @@ export default function UnifiedDemoPage() {
                 </div>
             </header>
 
-            <main className="max-w-5xl mx-auto px-6 py-12">
+            <main style={{ maxWidth: '72rem', margin: '0 auto', padding: '3rem 1.5rem' }}>
                 {/* Progress Steps */}
-                <div className="flex justify-center mb-12">
+                <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '3rem' }}>
                     <div className="flex items-center gap-4">
                         {['plan', 'payment', 'processing', 'success'].map((s, i) => (
                             <div key={s} className="flex items-center">

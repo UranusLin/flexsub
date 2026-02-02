@@ -95,20 +95,20 @@ export default function CrossChainPage() {
     };
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-gray-900">
+        <div style={{ minHeight: '100vh', background: 'linear-gradient(to bottom right, #111827, #4c1d95, #111827)' }}>
             {/* Header */}
-            <header className="border-b border-white/10 backdrop-blur-xl">
-                <div className="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
-                    <Link href="/" className="flex items-center gap-2">
-                        <span className="text-2xl">🔗</span>
-                        <span className="text-white font-bold">FlexSub</span>
-                        <span className="text-purple-400 text-sm">Cross-Chain</span>
+            <header style={{ borderBottom: '1px solid rgba(255,255,255,0.1)', backdropFilter: 'blur(16px)' }}>
+                <div style={{ maxWidth: '80rem', margin: '0 auto', padding: '1rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', textDecoration: 'none' }}>
+                        <span style={{ fontSize: '1.5rem' }}>🔗</span>
+                        <span style={{ color: 'white', fontWeight: 'bold' }}>FlexSub</span>
+                        <span style={{ color: '#A78BFA', fontSize: '0.875rem' }}>Cross-Chain</span>
                     </Link>
                     <ConnectButton />
                 </div>
             </header>
 
-            <main className="max-w-4xl mx-auto px-4 py-12">
+            <main style={{ maxWidth: '56rem', margin: '0 auto', padding: '3rem 1rem' }}>
                 {/* Hero */}
                 <div className="text-center mb-12">
                     <div className="inline-block px-4 py-2 bg-gradient-to-r from-orange-500/20 to-yellow-500/20 rounded-full border border-orange-500/30 mb-4">
@@ -134,8 +134,8 @@ export default function CrossChainPage() {
                                     key={chain.id}
                                     onClick={() => setSourceChain(chain)}
                                     className={`p-4 rounded-xl border transition-all ${sourceChain.id === chain.id
-                                            ? 'border-purple-500 bg-purple-500/20'
-                                            : 'border-white/10 hover:border-white/30'
+                                        ? 'border-purple-500 bg-purple-500/20'
+                                        : 'border-white/10 hover:border-white/30'
                                         }`}
                                 >
                                     <div className="text-2xl mb-2" style={{ color: chain.color }}>⬡</div>
@@ -155,8 +155,8 @@ export default function CrossChainPage() {
                                     key={plan.id}
                                     onClick={() => setSelectedPlan(plan)}
                                     className={`p-4 rounded-xl border transition-all ${selectedPlan.id === plan.id
-                                            ? 'border-green-500 bg-green-500/20'
-                                            : 'border-white/10 hover:border-white/30'
+                                        ? 'border-green-500 bg-green-500/20'
+                                        : 'border-white/10 hover:border-white/30'
                                         }`}
                                 >
                                     <div className="text-white font-bold text-lg">{plan.name}</div>
