@@ -573,7 +573,7 @@ export default function Home() {
             )}
 
             <footer className={styles.footer}>
-                <p>Built for HackMoney 2026 🏆</p>
+                <p>Flexible Subscription Payments ⚡</p>
                 <p className={styles.prizes}>Yellow · Arc · LI.FI</p>
                 <div className={styles.footerLinks}>
                     <Link href="/dashboard" className={styles.dashboardLink}>

@@ -10,10 +10,10 @@ import { getNetworkConfig } from '../providers';
 /**
  * FlexSub Unified Demo
  * 
- * Complete demo for all HackMoney 2026 prize tracks:
- * - Arc ($10K): Direct USDC payments
- * - LI.FI ($6K): Cross-chain subscription
- * - Yellow ($15K): Off-chain micropayments
+ * Complete subscription payment experience:
+ * - Direct USDC payments via Arc
+ * - Cross-chain payments via LI.FI
+ * - Off-chain micropayments via Yellow Network
  */
 
 // ABI for contracts
@@ -52,13 +52,13 @@ const PLANS = [
     { id: 3, name: 'Enterprise', price: '29.99', features: ['Everything in Pro', 'Dedicated support', 'Custom integrations', 'SLA guarantee'] },
 ];
 
-// Payment methods (Prize Tracks)
+// Payment methods
 const PAYMENT_METHODS = [
     {
         id: 'arc',
         name: 'Direct USDC',
         icon: '💳',
-        prize: 'Arc $10K',
+        badge: 'Powered by Arc',
         description: 'Pay directly with USDC on this chain',
         color: 'from-blue-500 to-cyan-500',
     },
@@ -66,7 +66,7 @@ const PAYMENT_METHODS = [
         id: 'lifi',
         name: 'Cross-Chain',
         icon: '🔗',
-        prize: 'LI.FI $6K',
+        badge: 'Powered by LI.FI',
         description: 'Pay from any chain with any token',
         color: 'from-purple-500 to-pink-500',
     },
@@ -74,7 +74,7 @@ const PAYMENT_METHODS = [
         id: 'yellow',
         name: 'Micropayment',
         icon: '⚡',
-        prize: 'Yellow $15K',
+        badge: 'Powered by Yellow',
         description: 'Pay-per-use with instant off-chain payments',
         color: 'from-yellow-500 to-orange-500',
     },
@@ -245,14 +245,14 @@ export default function UnifiedDemoPage() {
                         <span className="text-3xl">⚡</span>
                         <div>
                             <div className="text-xl font-bold text-white">FlexSub</div>
-                            <div className="text-xs text-gray-400">HackMoney 2026</div>
+                            <div className="text-xs text-gray-400">Subscription Protocol</div>
                         </div>
                     </Link>
                     <div className="flex items-center gap-4">
                         <div className="hidden md:flex gap-2">
                             {PAYMENT_METHODS.map(p => (
                                 <span key={p.id} className="px-2 py-1 bg-white/5 rounded text-xs text-gray-400">
-                                    {p.prize}
+                                    {p.badge}
                                 </span>
                             ))}
                         </div>
@@ -378,7 +378,7 @@ export default function UnifiedDemoPage() {
                                 >
                                     <div style={{ fontSize: '2.5rem', marginBottom: '0.75rem' }}>{method.icon}</div>
                                     <div style={{ fontSize: '1.125rem', fontWeight: 'bold', color: 'white', marginBottom: '0.25rem' }}>{method.name}</div>
-                                    <div style={{ fontSize: '0.75rem', color: '#FBBF24', marginBottom: '0.5rem' }}>🏆 {method.prize}</div>
+                                    <div style={{ fontSize: '0.75rem', color: '#60A5FA', marginBottom: '0.5rem' }}>{method.badge}</div>
                                     <div style={{ fontSize: '0.875rem', color: '#9CA3AF' }}>{method.description}</div>
                                 </button>
                             ))}
@@ -470,8 +470,8 @@ export default function UnifiedDemoPage() {
                                         <span className="text-white font-medium">{selectedPayment.icon} {selectedPayment.name}</span>
                                     </div>
                                     <div className="flex justify-between">
-                                        <span className="text-gray-400">Prize Track</span>
-                                        <span className="text-yellow-400 font-medium">{selectedPayment.prize}</span>
+                                        <span className="text-gray-400">Provider</span>
+                                        <span className="text-blue-400 font-medium">{selectedPayment.badge}</span>
                                     </div>
                                 </div>
 
@@ -531,8 +531,8 @@ export default function UnifiedDemoPage() {
                             maxWidth: '28rem',
                             margin: '0 auto 2rem auto'
                         }}>
-                            <div style={{ color: '#22C55E', fontWeight: 'bold', marginBottom: '0.5rem' }}>🏆 Prize Track Demonstrated</div>
-                            <div style={{ fontSize: '1.5rem', fontWeight: 'bold', color: 'white' }}>{selectedPayment.prize}</div>
+                            <div style={{ color: '#22C55E', fontWeight: 'bold', marginBottom: '0.5rem' }}>✅ Payment Method Used</div>
+                            <div style={{ fontSize: '1.5rem', fontWeight: 'bold', color: 'white' }}>{selectedPayment.name}</div>
                             <div style={{ color: '#9CA3AF', fontSize: '0.875rem', marginTop: '0.5rem' }}>{selectedPayment.description}</div>
                         </div>
 
@@ -569,7 +569,7 @@ export default function UnifiedDemoPage() {
                 fontSize: '0.875rem',
                 zIndex: 50
             }}>
-                FlexSub Protocol • HackMoney 2026 • Targeting $31,000+ in Prizes
+                FlexSub Protocol • Flexible Subscription Payments • Built with Arc, LI.FI & Yellow
             </footer>
 
             <style jsx>{`

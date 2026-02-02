@@ -134,7 +134,7 @@ export default function YellowSessionPage() {
                 {/* Hero */}
                 <div className="text-center mb-12">
                     <div className="inline-block px-4 py-2 bg-gradient-to-r from-yellow-500/20 to-orange-500/20 rounded-full border border-yellow-500/30 mb-4">
-                        <span className="text-yellow-400">🏆 Yellow Network Prize Track Demo</span>
+                        <span className="text-yellow-400">⚡ Yellow Network Integration</span>
                     </div>
                     <h1 className="text-4xl font-bold text-white mb-4">
                         <span className="text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-orange-400">Instant</span> Off-Chain Payments

@@ -112,7 +112,7 @@ export default function CrossChainPage() {
                 {/* Hero */}
                 <div className="text-center mb-12">
                     <div className="inline-block px-4 py-2 bg-gradient-to-r from-orange-500/20 to-yellow-500/20 rounded-full border border-orange-500/30 mb-4">
-                        <span className="text-orange-400">🏆 LI.FI Prize Track Demo</span>
+                        <span className="text-orange-400">🔗 LI.FI Integration</span>
                     </div>
                     <h1 className="text-4xl font-bold text-white mb-4">
                         Subscribe from <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-400">Any Chain</span>
