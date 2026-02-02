@@ -267,9 +267,131 @@ export class LiFiIntegration {
         return USDC_ADDRESSES[chainId];
     }
 
+    /**
+     * Cross-chain subscription: Swap any token from any chain to USDC on target chain,
+     * then subscribe to a FlexSub plan
+     * 
+     * This is the main integration point for the LI.FI prize track
+     */
+    async crossChainSubscribe(params: {
+        // Source chain info
+        fromChain: ChainId;
+        fromToken: Address;
+        fromAmount: string;
+        fromAddress: Address;
+        // Target subscription info
+        toChain: ChainId;
+        planId: bigint;
+        flexSubContract: Address;
+        // Progress callback
+        onProgress?: (step: string, progress: number) => void;
+    }): Promise<{
+        success: boolean;
+        bridgeTxHash?: string;
+        subscribeTxHash?: string;
+        usdcAmount?: string;
+        error?: string;
+    }> {
+        this.ensureInitialized();
+
+        try {
+            // Step 1: Get quote for cross-chain swap to USDC
+            params.onProgress?.('🔍 Getting cross-chain quote...', 10);
+
+            const { quote, toAmount } = await this.getQuote({
+                fromChain: params.fromChain,
+                fromToken: params.fromToken,
+                fromAmount: params.fromAmount,
+                fromAddress: params.fromAddress,
+                toChain: params.toChain,
+            });
+
+            console.log('[LI.FI] Quote received, will receive', toAmount, 'USDC');
+
+            // Step 2: Execute the cross-chain swap
+            params.onProgress?.('🌉 Bridging assets to target chain...', 30);
+
+            const bridgeResult = await this.executeSwap(quote, {
+                onStepStarted: (step) => {
+                    const stepName = step.type === 'swap' ? '💱 Swapping' : '🌉 Bridging';
+                    params.onProgress?.(`${stepName}...`, 50);
+                },
+                onStepCompleted: () => {
+                    params.onProgress?.('✅ Bridge complete!', 70);
+                },
+            });
+
+            if (!bridgeResult.success) {
+                return {
+                    success: false,
+                    error: 'Bridge transaction failed',
+                };
+            }
+
+            // Step 3: The subscription happens on the target chain
+            // Return the bridge result - subscription will be handled by the frontend
+            // after the bridged USDC arrives
+            params.onProgress?.('📝 Ready to subscribe on target chain', 90);
+
+            return {
+                success: true,
+                bridgeTxHash: bridgeResult.txHash,
+                usdcAmount: toAmount,
+            };
+        } catch (error) {
+            console.error('[LI.FI] Cross-chain subscribe failed:', error);
+            return {
+                success: false,
+                error: (error as Error).message,
+            };
+        }
+    }
+
+    /**
+     * Get estimated cost and time for cross-chain subscription
+     */
+    async estimateCrossChainSubscribe(params: {
+        fromChain: ChainId;
+        fromToken: Address;
+        fromAmount: string;
+        toChain: ChainId;
+    }): Promise<{
+        estimatedUsdcReceived: string;
+        estimatedGasCost: string;
+        estimatedTime: number; // seconds
+        route: string; // human readable route description
+    }> {
+        this.ensureInitialized();
+
+        const routes = await this.getRoutes({
+            fromChain: params.fromChain,
+            fromToken: params.fromToken,
+            fromAmount: params.fromAmount,
+            toChain: params.toChain,
+        });
+
+        if (routes.length === 0) {
+            throw new Error('No routes available for this swap');
+        }
+
+        const bestRoute = routes[0];
+        const steps = bestRoute.steps.map(s => s.tool).join(' → ');
+
+        return {
+            estimatedUsdcReceived: bestRoute.toAmount,
+            estimatedGasCost: bestRoute.steps.reduce((acc, s) => {
+                const gasCost = s.estimate.gasCosts?.[0]?.amount ?? '0';
+                return (BigInt(acc) + BigInt(gasCost)).toString();
+            }, '0'),
+            estimatedTime: bestRoute.steps.reduce((acc, s) => acc + s.estimate.executionDuration, 0),
+            route: steps,
+        };
+    }
+
     private ensureInitialized(): void {
         if (!this.initialized) {
             this.initialize();
         }
     }
 }
+

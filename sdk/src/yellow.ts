@@ -1,9 +1,14 @@
 import type { Address } from 'viem';
 import type { YellowConfig } from './types';
 
-// Re-export types that would come from the SDK
-// In production, import from '@erc7824/nitrolite'
+// Import from Yellow Network Nitrolite SDK
+// Note: Using available exports from @erc7824/nitrolite
+import {
+    createAppSessionMessage,
+    type ParsedResponse,
+} from '@erc7824/nitrolite';
 
+// Types for state channel operations
 interface AppDefinition {
     protocol: string;
     participants: string[];
