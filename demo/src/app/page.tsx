@@ -576,6 +576,9 @@ export default function Home() {
                 <p>Flexible Subscription Payments ⚡</p>
                 <p className={styles.prizes}>Yellow · Arc · LI.FI</p>
                 <div className={styles.footerLinks}>
+                    <Link href="/explorer" className={styles.dashboardLink}>
+                        🔍 Block Explorer
+                    </Link>
                     <Link href="/dashboard" className={styles.dashboardLink}>
                         📋 My Subscriptions
                     </Link>
