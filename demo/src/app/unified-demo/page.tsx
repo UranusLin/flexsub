@@ -239,23 +239,30 @@ export default function UnifiedDemoPage() {
     return (
         <div style={{ minHeight: '100vh', background: 'linear-gradient(to bottom right, #111827, #1e1b4b, #111827)' }}>
             {/* Header */}
-            <header className="border-b border-white/10 backdrop-blur-xl sticky top-0 z-50">
-                <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
-                    <Link href="/" className="flex items-center gap-3">
-                        <span className="text-3xl">⚡</span>
+            <header style={{
+                borderBottom: '1px solid rgba(255,255,255,0.1)',
+                backdropFilter: 'blur(12px)',
+                position: 'sticky',
+                top: 0,
+                zIndex: 50,
+                background: 'rgba(17,24,39,0.8)'
+            }}>
+                <div style={{
+                    maxWidth: '72rem',
+                    margin: '0 auto',
+                    padding: '1rem 1.5rem',
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'center'
+                }}>
+                    <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', textDecoration: 'none' }}>
+                        <span style={{ fontSize: '1.875rem' }}>⚡</span>
                         <div>
-                            <div className="text-xl font-bold text-white">FlexSub</div>
-                            <div className="text-xs text-gray-400">Subscription Protocol</div>
+                            <div style={{ fontSize: '1.25rem', fontWeight: 'bold', color: 'white' }}>FlexSub</div>
+                            <div style={{ fontSize: '0.75rem', color: '#9CA3AF' }}>Subscription Protocol</div>
                         </div>
                     </Link>
-                    <div className="flex items-center gap-4">
-                        <div className="hidden md:flex gap-2">
-                            {PAYMENT_METHODS.map(p => (
-                                <span key={p.id} className="px-2 py-1 bg-white/5 rounded text-xs text-gray-400">
-                                    {p.badge}
-                                </span>
-                            ))}
-                        </div>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
                         <ConnectButton />
                     </div>
                 </div>
