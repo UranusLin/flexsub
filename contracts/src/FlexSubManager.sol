@@ -70,7 +70,13 @@ contract FlexSubManager is IFlexSub {
 
         merchantPlans[msg.sender].push(planId);
 
-        emit PlanCreated(planId, msg.sender, pricePerPeriod, periodDuration, name);
+        emit PlanCreated(
+            planId,
+            msg.sender,
+            pricePerPeriod,
+            periodDuration,
+            name
+        );
     }
 
     /**
@@ -91,10 +97,22 @@ contract FlexSubManager is IFlexSub {
      * @param planId The ID of the plan to subscribe to
      * @return subscriptionId The ID of the created subscription
      */
-    function subscribe(uint256 planId) external returns (uint256 subscriptionId) {
+    function subscribe(
+        uint256 planId
+    ) external returns (uint256 subscriptionId) {
         Plan storage plan = plans[planId];
         require(plan.isActive, "Plan not active");
         require(plan.merchant != address(0), "Plan does not exist");
+
+        // Transfer first period payment from subscriber to merchant
+        require(
+            IERC20(usdc).transferFrom(
+                msg.sender,
+                plan.merchant,
+                plan.pricePerPeriod
+            ),
+            "USDC transfer failed"
+        );
 
         subscriptionId = nextSubscriptionId++;
 
@@ -103,15 +121,12 @@ contract FlexSubManager is IFlexSub {
             subscriber: msg.sender,
             startTime: block.timestamp,
             lastChargeTime: block.timestamp,
-            totalCharged: 0,
+            totalCharged: plan.pricePerPeriod, // First payment charged
             isActive: true
         });
 
         subscriberSubscriptions[msg.sender].push(subscriptionId);
         plan.totalSubscribers++;
-
-        // TODO: Integrate with Yellow state channel for buffer deposit
-        // TODO: Integrate with LI.FI for cross-chain deposits
 
         emit Subscribed(subscriptionId, planId, msg.sender);
     }
@@ -161,15 +176,21 @@ contract FlexSubManager is IFlexSub {
         return plans[planId];
     }
 
-    function getSubscription(uint256 subscriptionId) external view returns (Subscription memory) {
+    function getSubscription(
+        uint256 subscriptionId
+    ) external view returns (Subscription memory) {
         return subscriptions[subscriptionId];
     }
 
-    function getMerchantPlans(address merchant) external view returns (uint256[] memory) {
+    function getMerchantPlans(
+        address merchant
+    ) external view returns (uint256[] memory) {
         return merchantPlans[merchant];
     }
 
-    function getSubscriberSubscriptions(address subscriber) external view returns (uint256[] memory) {
+    function getSubscriberSubscriptions(
+        address subscriber
+    ) external view returns (uint256[] memory) {
         return subscriberSubscriptions[subscriber];
     }
 }

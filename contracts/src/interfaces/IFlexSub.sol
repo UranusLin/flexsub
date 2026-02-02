@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.20;
 
+import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+
 /**
  * @title IFlexSub
  * @notice Interface for FlexSub subscription protocol
@@ -58,7 +60,9 @@ interface IFlexSub {
 
     function deactivatePlan(uint256 planId) external;
 
-    function subscribe(uint256 planId) external returns (uint256 subscriptionId);
+    function subscribe(
+        uint256 planId
+    ) external returns (uint256 subscriptionId);
 
     function cancelSubscription(uint256 subscriptionId) external;
 
@@ -66,5 +70,7 @@ interface IFlexSub {
 
     function getPlan(uint256 planId) external view returns (Plan memory);
 
-    function getSubscription(uint256 subscriptionId) external view returns (Subscription memory);
+    function getSubscription(
+        uint256 subscriptionId
+    ) external view returns (Subscription memory);
 }

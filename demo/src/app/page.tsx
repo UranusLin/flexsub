@@ -55,6 +55,26 @@ const FLEXSUB_ABI = [
     },
 ] as const;
 
+// ERC20 ABI for USDC approval
+const ERC20_ABI = [
+    {
+        name: 'approve',
+        type: 'function',
+        inputs: [
+            { name: 'spender', type: 'address' },
+            { name: 'amount', type: 'uint256' },
+        ],
+        outputs: [{ name: '', type: 'bool' }],
+    },
+    {
+        name: 'balanceOf',
+        type: 'function',
+        stateMutability: 'view',
+        inputs: [{ name: 'account', type: 'address' }],
+        outputs: [{ name: '', type: 'uint256' }],
+    },
+] as const;
+
 // Demo plan structure
 interface Plan {
     id: bigint;
@@ -65,31 +85,31 @@ interface Plan {
     onChain: boolean;
 }
 
-// Initial demo plans (will be replaced by on-chain data)
+// Initial demo plans (match Deploy.s.sol - will be replaced by on-chain data)
 const INITIAL_PLANS: Plan[] = [
     {
         id: 1n,
-        name: 'Starter',
+        name: 'Basic Plan',
         price: '4.99',
         period: 'monthly',
         features: ['Basic access', '10 API calls/day', 'Email support'],
-        onChain: false,
+        onChain: true,
     },
     {
         id: 2n,
-        name: 'Pro',
-        price: '19.99',
+        name: 'Pro Plan',
+        price: '9.99',
         period: 'monthly',
         features: ['Full access', 'Unlimited API calls', 'Priority support', 'Custom integrations'],
-        onChain: false,
+        onChain: true,
     },
     {
         id: 3n,
-        name: 'Enterprise',
-        price: '99.99',
+        name: 'Enterprise Plan',
+        price: '29.99',
         period: 'monthly',
         features: ['Everything in Pro', 'Dedicated account manager', 'SLA guarantee', 'On-premise deployment'],
-        onChain: false,
+        onChain: true,
     },
 ];
 
@@ -222,19 +242,41 @@ export default function Home() {
     const handleSubscribe = async () => {
         if (!walletClient || !selectedPlan || !contractAddress) return;
 
+        const usdcAddress = networkConfig?.usdcAddress;
+        if (!usdcAddress) {
+            setError('USDC address not configured for this network');
+            return;
+        }
+
         setFlowStep('subscribing');
         setError('');
 
         try {
-            // Step 1: Log the flow
-            addLog('🌐 Step 1: LI.FI cross-chain deposit (simulated for local)');
-            await new Promise(r => setTimeout(r, 1000));
+            // Calculate amount to approve (price in USDC, 6 decimals)
+            const amount = parseUnits(selectedPlan.price, 6);
 
-            addLog('⚡ Step 2: Yellow state channel setup (simulated for local)');
-            await new Promise(r => setTimeout(r, 1000));
+            // Step 1: Approve USDC
+            addLog(`💵 Step 1: Approving ${selectedPlan.price} USDC for subscription...`);
+            const approveHash = await walletClient.writeContract({
+                address: usdcAddress,
+                abi: ERC20_ABI,
+                functionName: 'approve',
+                args: [contractAddress, amount],
+            });
+            addLog(`⏳ Approval tx sent: ${approveHash.slice(0, 10)}...`);
+            await publicClient?.waitForTransactionReceipt({ hash: approveHash });
+            addLog(`✅ USDC approved!`);
 
-            // Step 3: Actual on-chain subscription
-            addLog(`📝 Step 3: Subscribing to plan #${selectedPlan.id} on-chain...`);
+            // Step 2: LI.FI cross-chain (simulated)
+            addLog('🌐 Step 2: LI.FI cross-chain deposit (simulated for local)');
+            await new Promise(r => setTimeout(r, 500));
+
+            // Step 3: Yellow state channel (simulated)
+            addLog('⚡ Step 3: Yellow state channel setup (simulated for local)');
+            await new Promise(r => setTimeout(r, 500));
+
+            // Step 4: Actual on-chain subscription
+            addLog(`📝 Step 4: Subscribing to plan #${selectedPlan.id} on-chain...`);
 
             const hash = await walletClient.writeContract({
                 address: contractAddress,
@@ -248,7 +290,7 @@ export default function Home() {
 
             // Wait for confirmation
             await publicClient?.waitForTransactionReceipt({ hash });
-            addLog(`✅ Subscription confirmed on-chain!`);
+            addLog(`✅ Subscription confirmed! You paid ${selectedPlan.price} USDC.`);
 
             setFlowStep('success');
         } catch (err: any) {

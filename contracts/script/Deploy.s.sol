@@ -71,12 +71,33 @@ contract DeployFlexSub is Script {
 
         FlexSubManager flexsub = new FlexSubManager(usdcAddress);
 
+        // On Anvil, create demo subscription plans
+        if (chainId == 31337) {
+            console.log("");
+            console.log("=== Creating Demo Subscription Plans ===");
+
+            // Plan 1: Basic - $4.99/month
+            flexsub.createPlan(4990000, 30 days, "Basic Plan");
+            console.log("Created Plan 1: Basic Plan - $4.99/month");
+
+            // Plan 2: Pro - $9.99/month
+            flexsub.createPlan(9990000, 30 days, "Pro Plan");
+            console.log("Created Plan 2: Pro Plan - $9.99/month");
+
+            // Plan 3: Enterprise - $29.99/month
+            flexsub.createPlan(29990000, 30 days, "Enterprise Plan");
+            console.log("Created Plan 3: Enterprise Plan - $29.99/month");
+        }
+
         vm.stopBroadcast();
 
         console.log("");
         console.log("========================================");
         console.log("FlexSubManager deployed to:", address(flexsub));
         console.log("USDC Token:", usdcAddress);
+        if (chainId == 31337) {
+            console.log("Demo Plans: 3 plans created (IDs: 1, 2, 3)");
+        }
         console.log("========================================");
         console.log("");
         console.log("Update providers.tsx with:");
