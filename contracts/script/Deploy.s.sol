@@ -3,12 +3,16 @@ pragma solidity ^0.8.20;
 
 import "forge-std/Script.sol";
 import "../src/FlexSubManager.sol";
+import "../src/MockUSDC.sol";
 
 /**
  * @title DeployFlexSub
  * @notice Deployment script for FlexSubManager contract
  *
  * Usage:
+ *   # Deploy to Anvil (local)
+ *   forge script script/Deploy.s.sol:DeployFlexSub --rpc-url http://127.0.0.1:8545 --broadcast
+ *
  *   # Deploy to Arbitrum Sepolia (testnet)
  *   forge script script/Deploy.s.sol:DeployFlexSub --rpc-url arbitrum-sepolia --broadcast
  *
@@ -22,6 +26,8 @@ contract DeployFlexSub is Script {
         0x75faf114eafb1BDbe2F0316DF893fd58CE46AA4d;
     address constant USDC_OPTIMISM = 0x0b2C639c533813f4Aa9D7837CAf62653d097Ff85;
     address constant USDC_BASE = 0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913;
+    address constant USDC_BASE_SEPOLIA =
+        0x036CbD53842c5426634e7929541eC2318f3dCF7e;
 
     function run() external {
         // Use PRIVATE_KEY env var, or fallback to Anvil's default first account for local testing
@@ -31,27 +37,54 @@ contract DeployFlexSub is Script {
                 0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80
             )
         );
-        address usdc = getUsdcAddress();
 
-        console.log("Deploying FlexSubManager...");
-        console.log("Network:", block.chainid);
-        console.log("USDC:", usdc);
+        address deployer = vm.addr(deployerPrivateKey);
+        uint256 chainId = block.chainid;
+
+        console.log("Deploying FlexSub...");
+        console.log("Chain ID:", chainId);
+        console.log("Deployer:", deployer);
 
         vm.startBroadcast(deployerPrivateKey);
 
-        FlexSubManager flexsub = new FlexSubManager(usdc);
+        address usdcAddress;
+
+        // For local Anvil, deploy MockUSDC
+        if (chainId == 31337) {
+            console.log("");
+            console.log("=== Deploying MockUSDC for local testing ===");
+            MockUSDC mockUsdc = new MockUSDC();
+            usdcAddress = address(mockUsdc);
+            console.log("MockUSDC deployed to:", usdcAddress);
+            console.log(
+                "Deployer USDC balance:",
+                mockUsdc.balanceOf(deployer) / 1e6,
+                "USDC"
+            );
+        } else {
+            usdcAddress = getUsdcAddress(chainId);
+        }
+
+        console.log("");
+        console.log("=== Deploying FlexSubManager ===");
+        console.log("Using USDC:", usdcAddress);
+
+        FlexSubManager flexsub = new FlexSubManager(usdcAddress);
 
         vm.stopBroadcast();
 
-        console.log("FlexSubManager deployed to:", address(flexsub));
         console.log("");
-        console.log("Add this to your .env:");
-        console.log("FLEXSUB_ADDRESS=", address(flexsub));
+        console.log("========================================");
+        console.log("FlexSubManager deployed to:", address(flexsub));
+        console.log("USDC Token:", usdcAddress);
+        console.log("========================================");
+        console.log("");
+        console.log("Update providers.tsx with:");
+        console.log("  contractAddress:", address(flexsub));
+        console.log("  usdcAddress:", usdcAddress);
     }
 
-    function getUsdcAddress() internal view returns (address) {
-        uint256 chainId = block.chainid;
-
+    function getUsdcAddress(uint256 chainId) internal pure returns (address) {
         if (chainId == 42161) {
             return USDC_ARBITRUM; // Arbitrum One
         } else if (chainId == 421614) {
@@ -60,10 +93,10 @@ contract DeployFlexSub is Script {
             return USDC_OPTIMISM; // Optimism
         } else if (chainId == 8453) {
             return USDC_BASE; // Base
+        } else if (chainId == 84532) {
+            return USDC_BASE_SEPOLIA; // Base Sepolia
         } else {
-            // Default to a mock address for local testing
-            console.log("Warning: Unknown chain, using mock USDC");
-            return address(0x1234567890123456789012345678901234567890);
+            revert("Unsupported chain");
         }
     }
 }

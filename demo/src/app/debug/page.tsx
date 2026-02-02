@@ -180,18 +180,51 @@ export default function DebugPage() {
         }
     };
 
-    // Anvil Faucet - send ETH to connected account
-    const requestAnvilFaucet = async () => {
+    // USDC Faucet - mint test USDC on Anvil
+    const requestUsdcFaucet = async () => {
         if (!account || chainId !== 31337) {
-            addLog('error', 'Faucet only available on Anvil (chain 31337)');
+            addLog('error', 'USDC Faucet only available on Anvil (chain 31337)');
             return;
         }
 
         setIsFauceting(true);
-        addLog('info', 'Requesting Anvil faucet...');
+        addLog('info', 'Requesting USDC from MockUSDC faucet...');
 
         try {
-            // Use Anvil's built-in faucet via JSON-RPC
+            // MockUSDC address on Anvil (first deployed contract)
+            const mockUsdcAddress = '0x5FbDB2315678afecb367f032d93F642f64180aa3';
+
+            // Encode faucet() function call
+            const faucetData = '0xde5f72fd'; // keccak256("faucet()")[:4]
+
+            const txHash = await (window as any).ethereum.request({
+                method: 'eth_sendTransaction',
+                params: [{
+                    from: account,
+                    to: mockUsdcAddress,
+                    data: faucetData,
+                }],
+            });
+
+            addLog('success', '💵 10,000 USDC minted to your account!', txHash);
+        } catch (error: any) {
+            addLog('error', `USDC Faucet failed: ${error.message}`);
+        } finally {
+            setIsFauceting(false);
+        }
+    };
+
+    // ETH Faucet - Add ETH on Anvil
+    const requestAnvilFaucet = async () => {
+        if (!account || chainId !== 31337) {
+            addLog('error', 'ETH Faucet only available on Anvil (chain 31337)');
+            return;
+        }
+
+        setIsFauceting(true);
+        addLog('info', 'Requesting ETH from Anvil...');
+
+        try {
             const response = await fetch('http://127.0.0.1:8545', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -210,7 +243,7 @@ export default function DebugPage() {
 
             addLog('success', '💰 10,000 ETH added to your account!');
         } catch (error: any) {
-            addLog('error', `Faucet failed: ${error.message}`);
+            addLog('error', `ETH Faucet failed: ${error.message}`);
         } finally {
             setIsFauceting(false);
         }
@@ -359,13 +392,23 @@ export default function DebugPage() {
                     {connected ? (
                         <>
                             {chainId === 31337 && (
-                                <button
-                                    className={styles.faucetButton}
-                                    onClick={requestAnvilFaucet}
-                                    disabled={isFauceting}
-                                >
-                                    {isFauceting ? '⏳...' : '🚰 Get ETH'}
-                                </button>
+                                <>
+                                    <button
+                                        className={styles.faucetButton}
+                                        onClick={requestAnvilFaucet}
+                                        disabled={isFauceting}
+                                    >
+                                        {isFauceting ? '⏳...' : '🚰 ETH'}
+                                    </button>
+                                    <button
+                                        className={styles.faucetButton}
+                                        onClick={requestUsdcFaucet}
+                                        disabled={isFauceting}
+                                        style={{ marginLeft: '0.5rem' }}
+                                    >
+                                        {isFauceting ? '⏳...' : '💵 USDC'}
+                                    </button>
+                                </>
                             )}
                             <div className={styles.connectedBadge}>
                                 🟢 {account.slice(0, 6)}...{account.slice(-4)}
