@@ -17,4 +17,21 @@ quote_style = "double"
 tab_width = 4
 wrap_comments = true
 
+# RPC URLs for deployment
+[rpc_endpoints]
+anvil = "http://127.0.0.1:8545"
+arbitrum = "https://arb1.arbitrum.io/rpc"
+arbitrum-sepolia = "https://sepolia-rollup.arbitrum.io/rpc"
+base = "https://mainnet.base.org"
+base-sepolia = "https://sepolia.base.org"
+optimism = "https://mainnet.optimism.io"
+polygon = "https://polygon-rpc.com"
+
+# Etherscan API keys for contract verification (set in .env)
+[etherscan]
+arbitrum = { key = "${ARBISCAN_API_KEY}", url = "https://api.arbiscan.io/api" }
+arbitrum-sepolia = { key = "${ARBISCAN_API_KEY}", url = "https://api-sepolia.arbiscan.io/api" }
+base = { key = "${BASESCAN_API_KEY}", url = "https://api.basescan.org/api" }
+base-sepolia = { key = "${BASESCAN_API_KEY}", url = "https://api-sepolia.basescan.org/api" }
+
 # See more config options https://github.com/foundry-rs/foundry/blob/master/crates/config/README.md#all-options

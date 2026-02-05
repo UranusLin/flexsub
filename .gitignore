@@ -36,3 +36,4 @@ coverage/
 # Foundry
 contracts/lib/
 contracts/broadcast/
+contracts/.env
