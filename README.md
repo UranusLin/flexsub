@@ -6,6 +6,34 @@ FlexSub is a next-generation subscription protocol built for the multi-chain web
 
 ---
 
+## 💡 Vision
+
+### The Problem
+
+Today's Web3 subscription experience is broken:
+
+- **Chain Fragmentation**: Users have assets scattered across multiple chains. Subscribing to a service shouldn't require manual bridging and swapping.
+- **Gas Fee Overhead**: Every subscription payment incurs gas fees, making micropayments and frequent billing impractical.
+- **Stablecoin Friction**: Merchants want to receive USDC for predictable revenue, but users hold various tokens.
+
+### Our Solution
+
+FlexSub reimagines subscriptions for the multi-chain era:
+
+1. **Pay from Anywhere**: Subscribe using any token from any chain. LI.FI handles the bridge and swap automatically.
+2. **Instant & Gas-less**: Yellow Network's state channels enable real-time micropayments without gas fees per transaction.
+3. **Stable Settlement**: All payments settle in USDC via Circle, giving merchants predictable, stable revenue.
+
+### Why This Matters
+
+We believe subscriptions are the backbone of the creator economy. By removing blockchain complexity, FlexSub enables:
+
+- **Creators** to monetize globally without payment processor restrictions
+- **Users** to subscribe with whatever assets they have, wherever they are
+- **Developers** to integrate flexible billing with a simple SDK
+
+---
+
 ## 🛠️ Technical Architecture
 
 ```
