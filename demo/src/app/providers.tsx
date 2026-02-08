@@ -31,8 +31,11 @@ type DeploymentInfo = {
     timestamp?: string;
 };
 
-// Get Anvil addresses from deployments.json (auto-synced)
-const anvilDeployment = (deployments as Record<string, DeploymentInfo>)['31337'];
+// Get deployment addresses from deployments.json (auto-synced)
+const deploymentsInfo = deployments as Record<string, DeploymentInfo>;
+const anvilDeployment = deploymentsInfo['31337'];
+const arbitrumSepoliaDeployment = deploymentsInfo['421614'];
+const baseSepoliaDeployment = deploymentsInfo['84532'];
 
 // Supported networks with contract addresses
 export const NETWORK_CONFIGS: Record<number, {
@@ -53,8 +56,8 @@ export const NETWORK_CONFIGS: Record<number, {
     // Arbitrum Sepolia (Testnet)
     421614: {
         name: 'Arbitrum Sepolia',
-        contractAddress: null, // TODO: Deploy and update
-        usdcAddress: '0x75faf114eafb1BDbe2F0316DF893fd58CE46AA4d', // Circle USDC on Arb Sepolia
+        contractAddress: arbitrumSepoliaDeployment?.contractAddress as `0x${string}` ?? null,
+        usdcAddress: arbitrumSepoliaDeployment?.usdcAddress as `0x${string}` ?? '0x75faf114eafb1BDbe2F0316DF893fd58CE46AA4d',
         rpcUrl: 'https://sepolia-rollup.arbitrum.io/rpc',
         explorerUrl: 'https://sepolia.arbiscan.io',
         faucetUrl: 'https://faucet.circle.com/',
@@ -62,8 +65,8 @@ export const NETWORK_CONFIGS: Record<number, {
     // Base Sepolia (Testnet)
     84532: {
         name: 'Base Sepolia',
-        contractAddress: null, // TODO: Deploy and update
-        usdcAddress: '0x036CbD53842c5426634e7929541eC2318f3dCF7e', // Circle USDC on Base Sepolia
+        contractAddress: baseSepoliaDeployment?.contractAddress as `0x${string}` ?? null,
+        usdcAddress: baseSepoliaDeployment?.usdcAddress as `0x${string}` ?? '0x036CbD53842c5426634e7929541eC2318f3dCF7e',
         rpcUrl: 'https://sepolia.base.org',
         explorerUrl: 'https://sepolia.basescan.org',
         faucetUrl: 'https://faucet.circle.com/',

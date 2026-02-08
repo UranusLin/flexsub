@@ -30,22 +30,24 @@ contract DeployFlexSub is Script {
         0x036CbD53842c5426634e7929541eC2318f3dCF7e;
 
     function run() external {
-        // Use PRIVATE_KEY env var, or fallback to Anvil's default first account for local testing
-        uint256 deployerPrivateKey = vm.envOr(
-            "PRIVATE_KEY",
-            uint256(
-                0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80
-            )
-        );
+        // Try to get PRIVATE_KEY from environment
+        uint256 deployerPrivateKey = vm.envOr("PRIVATE_KEY", uint256(0));
 
-        address deployer = vm.addr(deployerPrivateKey);
         uint256 chainId = block.chainid;
-
         console.log("Deploying FlexSub...");
         console.log("Chain ID:", chainId);
-        console.log("Deployer:", deployer);
 
-        vm.startBroadcast(deployerPrivateKey);
+        address deployer;
+        if (deployerPrivateKey != 0) {
+            deployer = vm.addr(deployerPrivateKey);
+            console.log("Deployer:", deployer);
+            vm.startBroadcast(deployerPrivateKey);
+        } else {
+            console.log("Using default broadcast account (from flag or env)");
+            vm.startBroadcast();
+            deployer = msg.sender;
+            console.log("Deployer:", deployer);
+        }
 
         address usdcAddress;
 

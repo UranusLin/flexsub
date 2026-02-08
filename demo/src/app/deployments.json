@@ -4,5 +4,11 @@
     "contractAddress": "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512",
     "usdcAddress": "0x5FbDB2315678afecb367f032d93F642f64180aa3",
     "timestamp": "2026-02-02T10:07:02Z"
+  },
+  "421614": {
+    "name": "Arbitrum Sepolia",
+    "contractAddress": "0xE5074CBbd046AFb491EB8692abD6cF7ECCC6dEE5",
+    "usdcAddress": "0x75faf114eafb1BDbe2F0316DF893fd58CE46AA4d",
+    "timestamp": "2026-02-08T13:40:00Z"
   }
 }
