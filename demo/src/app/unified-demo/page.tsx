@@ -775,24 +775,24 @@ export default function UnifiedDemoPage() {
                             Processing {selectedPayment.name} Payment
                         </h1>
 
-                        <div className="grid md:grid-cols-2 gap-6">
+                        <div className="grid md:grid-cols-2 gap-8">
                             {/* Transaction Info */}
-                            <div className="bg-white/5 border border-white/10 rounded-2xl p-6">
-                                <div className="text-white font-bold mb-4">Transaction Details</div>
-                                <div className="space-y-3 text-sm">
-                                    <div className="flex justify-between">
+                            <div className="bg-white/5 border border-white/10 rounded-2xl p-8">
+                                <div className="text-white font-bold mb-6 text-lg">Transaction Details</div>
+                                <div className="space-y-4 text-sm">
+                                    <div className="flex justify-between px-2">
                                         <span className="text-gray-400">Plan</span>
                                         <span className="text-white font-medium">{selectedPlan.name}</span>
                                     </div>
-                                    <div className="flex justify-between">
+                                    <div className="flex justify-between px-2">
                                         <span className="text-gray-400">Amount</span>
                                         <span className="text-green-400 font-medium">${selectedPlan.price}</span>
                                     </div>
-                                    <div className="flex justify-between">
+                                    <div className="flex justify-between px-2">
                                         <span className="text-gray-400">Method</span>
                                         <span className="text-white font-medium">{selectedPayment.icon} {selectedPayment.name}</span>
                                     </div>
-                                    <div className="flex justify-between">
+                                    <div className="flex justify-between px-2">
                                         <span className="text-gray-400">Provider</span>
                                         <span className="text-blue-400 font-medium">{selectedPayment.badge}</span>
                                     </div>
@@ -800,8 +800,8 @@ export default function UnifiedDemoPage() {
 
                                 {/* Yellow Session Stats */}
                                 {selectedPayment.id === 'yellow' && yellowSession.connected && (
-                                    <div className="mt-6 pt-4 border-t border-white/10">
-                                        <div className="text-yellow-400 font-bold mb-3">Session Stats</div>
+                                    <div className="mt-6 pt-6 border-t border-white/10">
+                                        <div className="text-yellow-400 font-bold mb-4">Session Stats</div>
                                         <div className="grid grid-cols-3 gap-4 text-center">
                                             <div>
                                                 <div className="text-2xl font-bold text-white">{yellowSession.apiCalls}</div>
@@ -821,11 +821,11 @@ export default function UnifiedDemoPage() {
                             </div>
 
                             {/* Event Log */}
-                            <div className="bg-black/30 border border-white/10 rounded-2xl p-6">
-                                <div className="text-white font-bold mb-4">Event Log</div>
-                                <div className="h-64 overflow-y-auto font-mono text-sm space-y-1">
+                            <div className="bg-black/30 border border-white/10 rounded-2xl p-8">
+                                <div className="text-white font-bold mb-6 text-lg">Event Log</div>
+                                <div className="h-64 overflow-y-auto font-mono text-sm space-y-2 px-2">
                                     {logs.map((log, i) => (
-                                        <div key={i} className="text-green-400">{log}</div>
+                                        <div key={i} className="text-green-400 leading-relaxed">{log}</div>
                                     ))}
                                     {logs.length === 0 && (
                                         <div className="text-gray-500">Initializing...</div>
