@@ -34,6 +34,14 @@ We believe subscriptions are the backbone of the creator economy. By removing bl
 
 ---
 
+## 🎬 Demo
+
+![FlexSub Demo](./docs/demo.webp)
+
+*Complete subscription flow: Plan selection → Payment method → Yellow micropayment → Success*
+
+---
+
 ## 🛠️ Technical Architecture
 
 ```
