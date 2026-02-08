@@ -500,6 +500,91 @@ export default function UnifiedDemoPage() {
             </header>
 
             <main style={{ maxWidth: '72rem', margin: '0 auto', padding: '3rem 1.5rem 6rem 1.5rem' }}>
+
+                {/* Subscription Dashboard - Always Visible */}
+                <div style={{
+                    background: 'linear-gradient(135deg, rgba(99,102,241,0.1) 0%, rgba(168,85,247,0.1) 100%)',
+                    border: '1px solid rgba(99,102,241,0.3)',
+                    borderRadius: '1rem',
+                    padding: '1.5rem',
+                    marginBottom: '2rem'
+                }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                            <span style={{ fontSize: '1.5rem' }}>📊</span>
+                            <h2 style={{ color: 'white', fontWeight: 'bold', fontSize: '1.25rem', margin: 0 }}>Subscription Dashboard</h2>
+                        </div>
+                        <div style={{
+                            background: 'rgba(34,197,94,0.2)',
+                            color: '#22C55E',
+                            padding: '0.25rem 0.75rem',
+                            borderRadius: '9999px',
+                            fontSize: '0.75rem',
+                            fontWeight: 'bold'
+                        }}>
+                            {subscriptions.length} Active
+                        </div>
+                    </div>
+
+                    {subscriptions.length === 0 ? (
+                        <div style={{ textAlign: 'center', padding: '2rem', color: '#6B7280' }}>
+                            <div style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>💳</div>
+                            <p style={{ margin: 0 }}>No subscriptions yet. Complete a payment to see your subscriptions here!</p>
+                        </div>
+                    ) : (
+                        <div style={{ overflowX: 'auto' }}>
+                            <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+                                <thead>
+                                    <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.1)' }}>
+                                        <th style={{ padding: '0.75rem', textAlign: 'left', color: '#9CA3AF', fontSize: '0.75rem', fontWeight: '600' }}>ID</th>
+                                        <th style={{ padding: '0.75rem', textAlign: 'left', color: '#9CA3AF', fontSize: '0.75rem', fontWeight: '600' }}>PLAN</th>
+                                        <th style={{ padding: '0.75rem', textAlign: 'left', color: '#9CA3AF', fontSize: '0.75rem', fontWeight: '600' }}>PAYMENT METHOD</th>
+                                        <th style={{ padding: '0.75rem', textAlign: 'left', color: '#9CA3AF', fontSize: '0.75rem', fontWeight: '600' }}>STATUS</th>
+                                        <th style={{ padding: '0.75rem', textAlign: 'left', color: '#9CA3AF', fontSize: '0.75rem', fontWeight: '600' }}>CREATED</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {subscriptions.map((sub) => (
+                                        <tr key={sub.id} style={{ borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
+                                            <td style={{ padding: '0.75rem', color: 'white', fontFamily: 'monospace', fontWeight: 'bold' }}>#{sub.id}</td>
+                                            <td style={{ padding: '0.75rem', color: 'white' }}>{sub.planName}</td>
+                                            <td style={{ padding: '0.75rem' }}>
+                                                <span style={{
+                                                    background: sub.paymentMethod.includes('Arc') ? 'rgba(59,130,246,0.2)' :
+                                                        sub.paymentMethod.includes('LI.FI') ? 'rgba(168,85,247,0.2)' :
+                                                            'rgba(234,179,8,0.2)',
+                                                    color: sub.paymentMethod.includes('Arc') ? '#60A5FA' :
+                                                        sub.paymentMethod.includes('LI.FI') ? '#A855F7' :
+                                                            '#EAB308',
+                                                    padding: '0.25rem 0.5rem',
+                                                    borderRadius: '0.375rem',
+                                                    fontSize: '0.75rem',
+                                                    fontWeight: '500'
+                                                }}>
+                                                    {sub.paymentMethod}
+                                                </span>
+                                            </td>
+                                            <td style={{ padding: '0.75rem' }}>
+                                                <span style={{
+                                                    background: 'rgba(34,197,94,0.2)',
+                                                    color: '#22C55E',
+                                                    padding: '0.25rem 0.75rem',
+                                                    borderRadius: '9999px',
+                                                    fontSize: '0.75rem',
+                                                    fontWeight: 'bold'
+                                                }}>
+                                                    ● ACTIVE
+                                                </span>
+                                            </td>
+                                            <td style={{ padding: '0.75rem', color: '#9CA3AF', fontSize: '0.75rem' }}>{sub.createdAt}</td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        </div>
+                    )}
+                </div>
+
                 {/* Progress Steps */}
                 <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '3rem' }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
