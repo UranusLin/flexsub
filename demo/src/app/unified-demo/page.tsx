@@ -157,15 +157,21 @@ export default function UnifiedDemoPage() {
 
     // Direct USDC Payment (Arc Track)
     const handleArcPayment = async () => {
-        if (!walletClient || !networkConfig) return;
+        if (!walletClient || !networkConfig) {
+            addLog('❌ Wallet or network not connected');
+            return;
+        }
 
         setStep('processing');
         addLog('💳 Starting Arc/USDC payment...');
+        addLog(`📍 Network: ${networkConfig.name || 'Unknown'}`);
+        addLog(`📍 Contract: ${networkConfig.contractAddress?.slice(0, 10)}...`);
 
         try {
             // Approve a larger amount (100 USDC) to avoid repeated approvals
             const approvalAmount = parseUnits('100', 6);
             const planAmount = parseUnits(selectedPlan.price, 6);
+            addLog(`💰 Plan price: ${selectedPlan.price} USDC`);
 
             // Step 1: Check current allowance first
             addLog('🔍 Checking current USDC allowance...');
@@ -188,32 +194,34 @@ export default function UnifiedDemoPage() {
                 });
                 currentAllowance = allowanceResult as bigint;
                 addLog(`📊 Current allowance: ${formatUnits(currentAllowance, 6)} USDC`);
-            } catch {
-                addLog('⚠️ Could not check allowance, proceeding with approval...');
+            } catch (e: any) {
+                addLog(`⚠️ Could not check allowance: ${e.message?.slice(0, 50)}`);
             }
 
             // Only approve if needed
             if (currentAllowance < planAmount) {
                 addLog('📝 Approving USDC spend (100 USDC for future transactions)...');
+                addLog('⏳ Please confirm in MetaMask...');
                 const approveHash = await walletClient.writeContract({
                     address: networkConfig.usdcAddress,
                     abi: ERC20_ABI,
                     functionName: 'approve',
                     args: [networkConfig.contractAddress, approvalAmount],
                 });
-                addLog(`📤 Approval tx: ${approveHash.slice(0, 10)}...`);
+                addLog(`📤 Approval tx sent: ${approveHash.slice(0, 20)}...`);
 
-                // Wait with timeout (30 seconds)
-                addLog('⏳ Waiting for approval confirmation...');
+                // Wait with timeout (60 seconds for slow networks)
+                addLog('⏳ Waiting for approval confirmation (up to 60s)...');
                 try {
                     await Promise.race([
                         publicClient?.waitForTransactionReceipt({ hash: approveHash }),
-                        new Promise((_, reject) => setTimeout(() => reject(new Error('timeout')), 30000))
+                        new Promise((_, reject) => setTimeout(() => reject(new Error('timeout')), 60000))
                     ]);
                     addLog('✅ Approval confirmed!');
                 } catch (e: any) {
                     if (e.message === 'timeout') {
                         addLog('⚠️ Confirmation timeout, but tx was sent. Continuing...');
+                        addLog(`🔗 Check: https://sepolia.arbiscan.io/tx/${approveHash}`);
                     } else {
                         throw e;
                     }
@@ -224,6 +232,7 @@ export default function UnifiedDemoPage() {
 
             // Step 2: Subscribe
             addLog('📝 Creating subscription on FlexSubManager...');
+            addLog('⏳ Please confirm in MetaMask...');
             const contractAddr = networkConfig.contractAddress;
             if (!contractAddr) throw new Error('Contract not deployed');
             const subHash = await walletClient.writeContract({
@@ -232,20 +241,21 @@ export default function UnifiedDemoPage() {
                 functionName: 'subscribe',
                 args: [BigInt(selectedPlan.id)],
             });
-            addLog(`📤 Subscribe tx: ${subHash.slice(0, 10)}...`);
+            addLog(`📤 Subscribe tx sent: ${subHash.slice(0, 20)}...`);
+            addLog(`🔗 https://sepolia.arbiscan.io/tx/${subHash}`);
 
-            // Wait with timeout (30 seconds)
-            addLog('⏳ Waiting for subscription confirmation...');
+            // Wait with timeout (60 seconds)
+            addLog('⏳ Waiting for subscription confirmation (up to 60s)...');
             try {
                 await Promise.race([
                     publicClient?.waitForTransactionReceipt({ hash: subHash }),
-                    new Promise((_, reject) => setTimeout(() => reject(new Error('timeout')), 30000))
+                    new Promise((_, reject) => setTimeout(() => reject(new Error('timeout')), 60000))
                 ]);
                 addLog('🎉 Subscription created successfully!');
             } catch (e: any) {
                 if (e.message === 'timeout') {
-                    addLog('⚠️ Confirmation timeout, but tx was sent. Check explorer!');
-                    addLog('🎉 Subscription likely created - check Arbiscan!');
+                    addLog('⚠️ Confirmation timeout, but tx was sent!');
+                    addLog('🎉 Subscription likely created - proceeding to success!');
                 } else {
                     throw e;
                 }
@@ -263,7 +273,9 @@ export default function UnifiedDemoPage() {
             setStep('success');
         } catch (err: any) {
             addLog(`❌ Error: ${err.message}`);
-            setStep('payment');
+            addLog(`📋 Full error: ${JSON.stringify(err).slice(0, 200)}`);
+            // Don't go back to payment - stay on processing to show logs
+            setTimeout(() => setStep('payment'), 5000);
         }
     };
 
